@@ -1,0 +1,43 @@
+﻿@model LibraryManagementSystem.Models.User
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+    <div class="card p-4 mx-auto" style="max-width: 500px;">
+
+        <h2 class="text-center mb-4">Login</h2>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-info text-center">
+                @ViewBag.Message
+            </div>
+        }
+
+        <form asp-action="Login" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input asp-for="Password" type="password" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Login
+            </button>
+
+        </form>
+
+        <p class="text-center mt-3">
+            Do not have an account?
+            <a asp-controller="Account" asp-action="Register">Register here</a>
+        </p>
+
+    </div>
+</div>

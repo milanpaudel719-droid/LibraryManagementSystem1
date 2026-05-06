@@ -10,9 +10,13 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <None Remove="Data\" />
+    <None Remove="Views\LibraryProfiles\" />
+    <None Remove="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Views\LibraryProfiles\" />
+    <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />

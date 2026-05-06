@@ -2,8 +2,116 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="library-hero">
+    <div class="hero-content">
+        <h1>Discover, Borrow and Manage Books Online</h1>
+        <p>
+            KOI Library Management System provides a modern platform for librarians and members
+            to manage books, borrowing records, feedback, and library services efficiently.
+        </p>
 
+        <div class="hero-buttons">
+            <a class="btn btn-light" asp-controller="Books" asp-action="Index">Browse Collection</a>
+            <a class="btn btn-outline-light" asp-controller="BorrowTransactions" asp-action="Index">View My Borrowings</a>
+        </div>
+    </div>
+</section>
+
+<section class="quick-stats">
+    <div class="stat-card">
+        <h3>500+</h3>
+        <p>Books Managed</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>100+</h3>
+        <p>Active Members</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>24/7</h3>
+        <p>Online Access</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Secure</h3>
+        <p>Library Records</p>
+    </div>
+</section>
+
+<section class="mt-5">
+    <h2 class="section-title">System Features</h2>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="feature-card">
+                <h4>Book Management</h4>
+                <p>Add, update, view, and manage book records with ISBN, genre, availability, and cover image details.</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="feature-card">
+                <h4>Library Profiles</h4>
+                <p>Manage library name, location, operating hours, and contact information.</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="feature-card">
+                <h4>Borrowing Records</h4>
+                <p>Track borrowed, reserved, returned, and overdue books with return dates and fines.</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="feature-card">
+                <h4>Feedback & Ratings</h4>
+                <p>Allow members to submit feedback and ratings for books they have read.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mt-5">
+    <h2 class="section-title">Group Details</h2>
+    <p class="text-muted">
+        The following table presents the group members involved in developing this MVC Library Management System.
+    </p>
+
+    <table class="table table-bordered table-striped professional-table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Full Name</th>
+                <th>Task Completed</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>20032372</td>
+                <td>Surya Paudel</td>
+                <td>Books Module, Database Setup, GitHub Integration</td>
+            </tr>
+
+            <tr>
+                <td>20033284</td>
+                <td>Yukesh Rai</td>
+                <td>Frontend Design, Navigation Menu, UI Styling</td>
+            </tr>
+
+            <tr>
+                <td>MEMBER ID</td>
+                <td>Sazana B</td>
+                <td>Testing, Documentation, Requirement Review</td>
+            </tr>
+
+            <tr>
+                <td>MEMBER ID</td>
+                <td>Resica Shrestha</td>
+                <td>Borrowing Transactions, Feedback Module, Data Entry</td>
+            </tr>
+        </tbody>
+    </table>
+</section>

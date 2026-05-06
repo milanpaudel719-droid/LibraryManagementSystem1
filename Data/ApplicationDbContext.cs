@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using LibraryManagementSystem.Models;
+﻿using LibraryManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Data
@@ -16,5 +15,6 @@ namespace LibraryManagementSystem.Data
         public DbSet<BorrowingSetting> BorrowingSettings { get; set; }
         public DbSet<BorrowTransaction> BorrowTransactions { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
