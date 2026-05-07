@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "User Dashboard";
+}
+
+<div class="dashboard-header mb-4">
+    <h1 class="fw-bold">User Dashboard</h1>
+    <p class="text-muted">Manage your borrowing activities and explore library services.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Browse Catalogue</h4>
+            <p>Search and view available books in the library collection.</p>
+            <a asp-controller="Home" asp-action="Catalogue" class="btn btn-primary btn-sm">Open Catalogue</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>My Borrowings</h4>
+            <p>View borrowed, reserved, returned, and overdue books.</p>
+            <a asp-controller="BorrowTransactions" asp-action="Index" class="btn btn-primary btn-sm">View Borrowings</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Book Feedback</h4>
+            <p>Submit ratings and feedback for books you have read.</p>
+            <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-primary btn-sm">Give Feedback</a>
+        </div>
+    </div>
+</div>

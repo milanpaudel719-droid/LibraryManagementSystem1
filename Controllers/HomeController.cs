@@ -18,6 +18,11 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Catalogue()
+    {
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();
@@ -29,4 +34,3 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
-

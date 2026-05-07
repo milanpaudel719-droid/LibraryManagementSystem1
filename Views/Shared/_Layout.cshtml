@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,10 +28,11 @@
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#mainNavbar">
-
+                        data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-
                 </button>
 
                 <div class="collapse navbar-collapse" id="mainNavbar">
@@ -46,59 +49,139 @@
 
                         <li class="nav-item">
                             <a class="nav-link"
-                               asp-controller="Books"
-                               asp-action="Index">
-                                Browse Books
+                               asp-controller="Home"
+                               asp-action="Catalogue">
+                                Catalogue
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="LibraryProfiles"
-                               asp-action="Index">
-                                Library Profile
-                            </a>
-                        </li>
+                        @if (Context.Session.GetString("UserRole") == "Member")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Dashboard"
+                                   asp-action="UserDashboard">
+                                    Dashboard
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="BorrowingSettings"
-                               asp-action="Index">
-                                Borrowing Settings
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="BorrowTransactions"
+                                   asp-action="Index">
+                                    My Borrowings
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="BorrowTransactions"
-                               asp-action="Index">
-                                My Borrowings
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Feedbacks"
+                                   asp-action="Index">
+                                    Feedback
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Feedbacks"
-                               asp-action="Index">
-                                Feedback
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="LibraryProfiles"
+                                   asp-action="Index">
+                                    Library Profile
+                                </a>
+                            </li>
+                        }
+
+                        @if (Context.Session.GetString("UserRole") == "Staff")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Dashboard"
+                                   asp-action="StaffDashboard">
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="BorrowTransactions"
+                                   asp-action="Index">
+                                    Borrow Records
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Feedbacks"
+                                   asp-action="Index">
+                                    Feedback
+                                </a>
+                            </li>
+                        }
+
+                        @if (Context.Session.GetString("UserRole") == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Dashboard"
+                                   asp-action="AdminDashboard">
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Books"
+                                   asp-action="Index">
+                                    Admin Books
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="BorrowingSettings"
+                                   asp-action="Index">
+                                    Borrowing Settings
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="LibraryProfiles"
+                                   asp-action="Index">
+                                    Library Profile
+                                </a>
+                            </li>
+                        }
 
                     </ul>
 
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 align-items-center">
 
-                        <a class="btn btn-outline-primary btn-sm"
-                           asp-controller="Account"
-                           asp-action="Login">
-                            Login
-                        </a>
+                        @if (Context.Session.GetString("UserName") != null)
+                        {
+                            <span class="navbar-text me-2">
+                                Welcome, @Context.Session.GetString("UserName")
+                            </span>
 
-                        <a class="btn btn-primary btn-sm"
-                           asp-controller="Account"
-                           asp-action="Register">
-                            Register
-                        </a>
+                            <a class="btn btn-danger btn-sm"
+                               asp-controller="Account"
+                               asp-action="Logout">
+                                Logout
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-primary btn-sm"
+                               asp-controller="Account"
+                               asp-action="Login">
+                                Login
+                            </a>
+
+                            <a class="btn btn-primary btn-sm"
+                               asp-controller="Account"
+                               asp-action="Register">
+                                Register
+                            </a>
+                        }
 
                     </div>
 

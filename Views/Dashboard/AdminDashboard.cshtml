@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="dashboard-header mb-4">
+    <h1 class="fw-bold">Admin Dashboard</h1>
+    <p class="text-muted">Control library settings, book records, profiles, reports, and system management.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Manage Books</h4>
+            <p>Add, update, view, and delete book records.</p>
+            <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-sm">Manage Books</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Library Profile</h4>
+            <p>Manage library name, location, operating hours, and contact details.</p>
+            <a asp-controller="LibraryProfiles" asp-action="Index" class="btn btn-primary btn-sm">Open Profile</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Borrowing Settings</h4>
+            <p>Configure loan duration, renewal limits, fines, and borrowing limits.</p>
+            <a asp-controller="BorrowingSettings" asp-action="Index" class="btn btn-primary btn-sm">Manage Settings</a>
+        </div>
+    </div>
+</div>

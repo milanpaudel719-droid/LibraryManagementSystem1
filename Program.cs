@@ -6,13 +6,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// SQLite Database Connection
+// Add session service
+builder.Services.AddSession();
+
+// MySQL Database Connection
+var connectionString = "server=localhost;port=3306;database=LibraryDB;user=libraryuser;password=library123;";
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=library.db"));
+    options.UseMySql(connectionString,
+    ServerVersion.AutoDetect(connectionString)));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -20,9 +25,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 

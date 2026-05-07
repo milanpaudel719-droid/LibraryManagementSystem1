@@ -84,6 +84,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQm9ycm93VHJhbnNhY3Rpb25zL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/suryapaudel/Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Dashboard/AdminDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL0FkbWluRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/suryapaudel/Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Dashboard/StaffDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL1N0YWZmRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/suryapaudel/Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Dashboard/UserDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRGFzaGJvYXJkL1VzZXJEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/suryapaudel/Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Feedbacks/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmVlZGJhY2tzL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -102,6 +114,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/suryapaudel/Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Feedbacks/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRmVlZGJhY2tzL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/suryapaudel/Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Home/Catalogue.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9DYXRhbG9ndWUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/suryapaudel/Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Home/Index.cshtml]

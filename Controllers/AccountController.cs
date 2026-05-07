@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Models;
 
@@ -14,13 +15,11 @@ namespace LibraryManagementSystem.Controllers
             _context = context;
         }
 
-        // REGISTER PAGE
         public IActionResult Register()
         {
             return View();
         }
 
-        // REGISTER SAVE
         [HttpPost]
         public IActionResult Register(User user)
         {
@@ -35,13 +34,11 @@ namespace LibraryManagementSystem.Controllers
             return View(user);
         }
 
-        // LOGIN PAGE
         public IActionResult Login()
         {
             return View();
         }
 
-        // LOGIN CHECK
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
@@ -50,11 +47,31 @@ namespace LibraryManagementSystem.Controllers
 
             if (user != null)
             {
-                return RedirectToAction("Index", "Books");
+                HttpContext.Session.SetString("UserName", user.FullName);
+                HttpContext.Session.SetString("UserRole", user.Role);
+
+                if (user.Role == "Admin")
+                {
+                    return RedirectToAction("AdminDashboard", "Dashboard");
+                }
+                else if (user.Role == "Staff")
+                {
+                    return RedirectToAction("StaffDashboard", "Dashboard");
+                }
+                else
+                {
+                    return RedirectToAction("UserDashboard", "Dashboard");
+                }
             }
 
             ViewBag.Message = "Invalid Email or Password";
             return View();
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

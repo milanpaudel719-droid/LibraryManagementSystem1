@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+}
+
+<div class="dashboard-header mb-4">
+    <h1 class="fw-bold">Staff Dashboard</h1>
+    <p class="text-muted">Manage daily library operations, borrowing records, and member feedback.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Borrowing Records</h4>
+            <p>Track issued, returned, reserved, and overdue books.</p>
+            <a asp-controller="BorrowTransactions" asp-action="Index" class="btn btn-primary btn-sm">Manage Records</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Book Catalogue</h4>
+            <p>View the current book collection and availability status.</p>
+            <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-sm">View Books</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <h4>Feedback Review</h4>
+            <p>Review member comments and ratings for library books.</p>
+            <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-primary btn-sm">Review Feedback</a>
+        </div>
+    </div>
+</div>

@@ -1,65 +1,145 @@
 @model IEnumerable<LibraryManagementSystem.Models.BorrowTransaction>
+@using Microsoft.AspNetCore.Http
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Borrow Transactions";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MemberName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BookTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReturnDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FineAmount)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BorrowDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FineAmount)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div>
+        <h1 class="fw-bold">Borrowing Records</h1>
+
+        <p class="text-muted">
+            Track borrowed, returned, reserved, and overdue library books.
+        </p>
+    </div>
+
+    @if (Context.Session.GetString("UserName") != null)
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            + New Transaction
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="btn btn-primary">
+            Login to Borrow
+        </a>
+    }
+
+</div>
+
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+                            <h4 class="fw-bold text-primary">
+                                @item.BookTitle
+                            </h4>
+
+                            <p class="text-muted">
+                                Borrowed by @item.MemberName
+                            </p>
+                        </div>
+
+                        @if (item.Status == "Borrowed")
+                        {
+                            <span class="badge bg-warning text-dark">
+                                Borrowed
+                            </span>
+                        }
+                        else if (item.Status == "Returned")
+                        {
+                            <span class="badge bg-success">
+                                Returned
+                            </span>
+                        }
+                        else if (item.Status == "Reserved")
+                        {
+                            <span class="badge bg-info text-dark">
+                                Reserved
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                Overdue
+                            </span>
+                        }
+
+                    </div>
+
+                    <hr />
+
+                    <div class="row mb-3">
+
+                        <div class="col-6">
+                            <h6 class="fw-bold">Borrow Date</h6>
+                            <p class="text-muted">
+                                @item.BorrowDate.ToShortDateString()
+                            </p>
+                        </div>
+
+                        <div class="col-6">
+                            <h6 class="fw-bold">Return Date</h6>
+                            <p class="text-muted">
+                                @item.ReturnDate.ToShortDateString()
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Fine Amount</h6>
+
+                        <p class="text-danger fw-bold">
+                            $@item.FineAmount
+                        </p>
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="btn btn-outline-dark btn-sm">
+                            Details
+                        </a>
+
+                        @if (Context.Session.GetString("UserRole") == "Admin" ||
+                            Context.Session.GetString("UserRole") == "Staff")
+                        {
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-outline-primary btn-sm">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               class="btn btn-outline-danger btn-sm">
+                                Delete
+                            </a>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
