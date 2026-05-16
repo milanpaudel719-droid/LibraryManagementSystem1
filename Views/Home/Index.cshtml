@@ -11,7 +11,7 @@
         </p>
 
         <div class="hero-buttons">
-            <a class="btn btn-light" asp-controller="Books" asp-action="Index">Browse Collection</a>
+            <a class="btn btn-light" asp-controller="Home" asp-action="Catalogue">Browse Collection</a>
             <a class="btn btn-outline-light" asp-controller="BorrowTransactions" asp-action="Index">View My Borrowings</a>
         </div>
     </div>
@@ -38,6 +38,93 @@
         <p>Library Records</p>
     </div>
 </section>
+<section class="mt-5">
+
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-5">Explore Library Highlights</h2>
+        <p class="text-muted fs-5">
+            Automatically generated from library records and borrowing activity.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-3 col-md-6">
+            <div class="feature-card h-100 p-4">
+                <h4 class="fw-bold text-primary mb-3">📚 New Arrivals</h4>
+
+                @foreach (var book in ViewBag.NewArrivals)
+                {
+                    <div class="mb-3 border-bottom pb-2">
+                        <strong>@book.Title</strong>
+                        <p class="text-muted mb-1">@book.Author</p>
+                    </div>
+                }
+
+                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-primary btn-sm">
+                    View New Books
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="feature-card h-100 p-4">
+                <h4 class="fw-bold text-danger mb-3">🔥 Most Borrowed</h4>
+
+                @foreach (var book in ViewBag.MostBorrowed)
+                {
+                    <div class="mb-3 border-bottom pb-2">
+                        <strong>@book.BookTitle</strong>
+                        <p class="text-muted mb-1">Borrowed @book.BorrowCount times</p>
+                    </div>
+                }
+
+                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-danger btn-sm">
+                    View Popular
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="feature-card h-100 p-4">
+                <h4 class="fw-bold text-warning mb-3">⭐ Recommended</h4>
+
+                @foreach (var book in ViewBag.RecommendedBooks)
+                {
+                    <div class="mb-3 border-bottom pb-2">
+                        <strong>@book.Title</strong>
+                        <p class="text-muted mb-1">@book.Author</p>
+                    </div>
+                }
+
+                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-warning btn-sm">
+                    View Recommended
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="feature-card h-100 p-4">
+                <h4 class="fw-bold text-success mb-3">✅ Available Books</h4>
+
+                @foreach (var book in ViewBag.AvailableBooks)
+                {
+                    <div class="mb-3 border-bottom pb-2">
+                        <strong>@book.Title</strong>
+                        <p class="text-muted mb-1">Copies: @book.AvailableCopies</p>
+                    </div>
+                }
+
+                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-success btn-sm">
+                    View Available
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
 
 <section class="mt-5">
     <h2 class="section-title">System Features</h2>

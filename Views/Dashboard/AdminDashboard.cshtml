@@ -2,33 +2,130 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="dashboard-header mb-4">
+<div class="dashboard-header mb-5">
+
     <h1 class="fw-bold">Admin Dashboard</h1>
-    <p class="text-muted">Control library settings, book records, profiles, reports, and system management.</p>
+
+    <p class="text-muted">
+        Control library settings, book records, profiles, reports, and system management.
+    </p>
+
 </div>
 
 <div class="row g-4">
+
+    <!-- MANAGE BOOKS -->
     <div class="col-md-4">
-        <div class="feature-card">
+        <div class="feature-card h-100">
+
             <h4>Manage Books</h4>
-            <p>Add, update, view, and delete book records.</p>
-            <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-sm">Manage Books</a>
+
+            <p>
+                Add, update, view, and delete book records.
+            </p>
+
+            <a asp-controller="Books"
+               asp-action="Index"
+               class="btn btn-primary btn-sm">
+                Manage Books
+            </a>
+
         </div>
     </div>
 
+    <!-- LIBRARY PROFILE -->
     <div class="col-md-4">
-        <div class="feature-card">
+        <div class="feature-card h-100">
+
             <h4>Library Profile</h4>
-            <p>Manage library name, location, operating hours, and contact details.</p>
-            <a asp-controller="LibraryProfiles" asp-action="Index" class="btn btn-primary btn-sm">Open Profile</a>
+
+            <p>
+                Manage library name, location, operating hours, and contact details.
+            </p>
+
+            <a asp-controller="LibraryProfiles"
+               asp-action="Index"
+               class="btn btn-primary btn-sm">
+                Open Profile
+            </a>
+
         </div>
     </div>
 
+    <!-- BORROWING SETTINGS -->
     <div class="col-md-4">
-        <div class="feature-card">
+        <div class="feature-card h-100">
+
             <h4>Borrowing Settings</h4>
-            <p>Configure loan duration, renewal limits, fines, and borrowing limits.</p>
-            <a asp-controller="BorrowingSettings" asp-action="Index" class="btn btn-primary btn-sm">Manage Settings</a>
+
+            <p>
+                Configure loan duration, renewal limits, fines, and borrowing limits.
+            </p>
+
+            <a asp-controller="BorrowingSettings"
+               asp-action="Index"
+               class="btn btn-primary btn-sm">
+                Manage Settings
+            </a>
+
         </div>
     </div>
+
+    <!-- CATALOGUE VIEW -->
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+
+            <h4>Catalogue View</h4>
+
+            <p>
+                View all books available in the library catalogue and monitor available copies.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Catalogue"
+               class="btn btn-primary btn-sm">
+                View Catalogue
+            </a>
+
+        </div>
+    </div>
+
+    <!-- BORROW TRANSACTIONS -->
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+
+            <h4>Borrow Transactions</h4>
+
+            <p>
+                Track borrowed, reserved, returned, overdue books, and manage fines.
+            </p>
+
+            <a asp-controller="BorrowTransactions"
+               asp-action="Index"
+               class="btn btn-primary btn-sm">
+                View Transactions
+            </a>
+
+        </div>
+    </div>
+
+    <!-- FEEDBACK MANAGEMENT -->
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+
+            <h4>Feedback Management</h4>
+
+            <p>
+                Review ratings and feedback submitted by library members for books.
+            </p>
+
+            <a asp-controller="Feedbacks"
+               asp-action="Index"
+               class="btn btn-primary btn-sm">
+                View Feedback
+            </a>
+
+        </div>
+    </div>
+
 </div>

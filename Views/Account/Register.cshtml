@@ -5,57 +5,182 @@
 }
 
 <div class="container mt-5">
-    <div class="card p-4 mx-auto" style="max-width: 500px;">
 
-        <h2 class="text-center mb-4">Create Account</h2>
+    <div class="card shadow-sm border-0 p-4 mx-auto"
+         style="max-width: 650px; border-radius: 20px;">
+
+        <h2 class="text-center fw-bold mb-4">
+            Create Account
+        </h2>
 
         <form asp-action="Register" method="post">
 
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3">
+            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Full Name</label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">First Name</label>
+
+                    <input asp-for="FirstName"
+                           class="form-control" />
+
+                    <span asp-validation-for="FirstName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">Last Name</label>
+
+                    <input asp-for="LastName"
+                           class="form-control" />
+
+                    <span asp-validation-for="LastName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
             </div>
 
             <div class="mb-3">
+
+                <label class="form-label">
+                    Date of Birth
+                </label>
+
+                <input asp-for="DateOfBirth"
+                       type="date"
+                       class="form-control" />
+
+                <span asp-validation-for="DateOfBirth"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">Gender</label>
+
+                    <select asp-for="Gender"
+                            class="form-control">
+
+                        <option value="">
+                            -- Select Gender --
+                        </option>
+
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+
+                    </select>
+
+                    <span asp-validation-for="Gender"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Spoken Language
+                    </label>
+
+                    <input asp-for="SpokenLanguage"
+                           class="form-control" />
+
+                    <span asp-validation-for="SpokenLanguage"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Phone Number
+                </label>
+
+                <input asp-for="PhoneNumber"
+                       class="form-control" />
+
+                <span asp-validation-for="PhoneNumber"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-3">
+
                 <label class="form-label">Email</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+
+                <input asp-for="Email"
+                       class="form-control" />
+
+                <span asp-validation-for="Email"
+                      class="text-danger">
+                </span>
+
             </div>
 
-            <div class="mb-3">
+            <div class="mb-4">
+
                 <label class="form-label">Password</label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control" />
+
+                <span asp-validation-for="Password"
+                      class="text-danger">
+                </span>
+
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Role</label>
-                <select asp-for="Role" class="form-control">
-                    <option value="">-- Select Role --</option>
-                    <option value="Member">Member</option>
-                    <option value="Staff">Staff</option>
-                    <option value="Admin">Admin</option>
-                </select>
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
+            <input type="hidden"
+                   asp-for="Role"
+                   value="User" />
 
-            <button type="submit" class="btn btn-primary w-100">
+            <button type="submit"
+                    class="btn btn-primary w-100 py-2">
+
                 Register
+
             </button>
 
         </form>
 
-        <p class="text-center mt-3">
+        <p class="text-center mt-4">
+
             Already have an account?
-            <a asp-controller="Account" asp-action="Login">Login here</a>
+
+            <a asp-controller="Account"
+               asp-action="Login">
+
+                Login here
+
+            </a>
+
         </p>
 
     </div>
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

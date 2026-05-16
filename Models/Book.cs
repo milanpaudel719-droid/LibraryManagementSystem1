@@ -18,5 +18,9 @@ namespace LibraryManagementSystem.Models
         public string AvailabilityStatus { get; set; }
 
         public string CoverImageUrl { get; set; }
+
+        public int TotalCopies { get; set; }
+
+        public int AvailableCopies { get; set; }
     }
 }

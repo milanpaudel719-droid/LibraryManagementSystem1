@@ -23,6 +23,12 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public IActionResult Register(User user)
         {
+            user.FullName = user.FirstName + " " + user.LastName;
+            user.Role = "User";
+
+            ModelState.Remove("FullName");
+            ModelState.Remove("Role");
+
             if (ModelState.IsValid)
             {
                 _context.Users.Add(user);

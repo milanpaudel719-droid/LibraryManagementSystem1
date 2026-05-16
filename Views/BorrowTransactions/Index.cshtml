@@ -3,143 +3,135 @@
 
 @{
     ViewData["Title"] = "Borrow Transactions";
+
+    var userRole = Context.Session.GetString("UserRole");
+    var isAdminOrStaff = userRole == "Admin" || userRole == "Staff";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="mb-4">
 
-    <div>
-        <h1 class="fw-bold">Borrowing Records</h1>
+    <h1 class="fw-bold">Borrow Transactions</h1>
 
-        <p class="text-muted">
-            Track borrowed, returned, reserved, and overdue library books.
-        </p>
-    </div>
+    <p class="text-muted">
+        Track borrowed, returned, reserved, and overdue books.
+    </p>
 
-    @if (Context.Session.GetString("UserName") != null)
-    {
-        <a asp-action="Create" class="btn btn-primary">
-            + New Transaction
-        </a>
-    }
-    else
-    {
+</div>
+
+@if (Context.Session.GetString("UserName") == null)
+{
+    <div class="d-flex justify-content-center align-items-center"
+         style="min-height: 350px;">
+
         <a asp-controller="Account"
            asp-action="Login"
-           class="btn btn-primary">
-            Login to Borrow
+           class="btn btn-primary px-4 py-2">
+            Login to see the Borrowing Records
         </a>
-    }
 
-</div>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
 
-<div class="row">
+        <table class="table table-bordered table-hover shadow-sm bg-white">
 
-    @foreach (var item in Model)
-    {
-        <div class="col-lg-6 mb-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>Member</th>
+                    <th>Book</th>
+                    <th>Borrow Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
 
-            <div class="card shadow-sm border-0 rounded-4 h-100">
+                    @if (isAdminOrStaff)
+                    {
+                        <th>Actions</th>
+                    }
+                </tr>
+            </thead>
 
-                <div class="card-body p-4">
+            <tbody>
 
-                    <div class="d-flex justify-content-between align-items-start">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MemberName</td>
 
-                        <div>
-                            <h4 class="fw-bold text-primary">
-                                @item.BookTitle
-                            </h4>
+                        <td>@item.BookTitle</td>
 
-                            <p class="text-muted">
-                                Borrowed by @item.MemberName
-                            </p>
-                        </div>
+                        <td>@item.BorrowDate.ToShortDateString()</td>
 
-                        @if (item.Status == "Borrowed")
-                        {
-                            <span class="badge bg-warning text-dark">
-                                Borrowed
-                            </span>
-                        }
-                        else if (item.Status == "Returned")
-                        {
-                            <span class="badge bg-success">
-                                Returned
-                            </span>
-                        }
-                        else if (item.Status == "Reserved")
-                        {
-                            <span class="badge bg-info text-dark">
-                                Reserved
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">
-                                Overdue
-                            </span>
-                        }
+                        <td>@item.ReturnDate.ToShortDateString()</td>
 
-                    </div>
+                        <td>
+                            @if (item.Status == "Borrowed")
+                            {
+                                <span class="badge bg-warning text-dark">Borrowed</span>
+                            }
+                            else if (item.Status == "Returned")
+                            {
+                                <span class="badge bg-success">Returned</span>
+                            }
+                            else if (item.Status == "Reserved")
+                            {
+                                <span class="badge bg-info text-dark">Reserved</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Overdue</span>
+                            }
+                        </td>
 
-                    <hr />
-
-                    <div class="row mb-3">
-
-                        <div class="col-6">
-                            <h6 class="fw-bold">Borrow Date</h6>
-                            <p class="text-muted">
-                                @item.BorrowDate.ToShortDateString()
-                            </p>
-                        </div>
-
-                        <div class="col-6">
-                            <h6 class="fw-bold">Return Date</h6>
-                            <p class="text-muted">
-                                @item.ReturnDate.ToShortDateString()
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div class="mb-4">
-                        <h6 class="fw-bold">Fine Amount</h6>
-
-                        <p class="text-danger fw-bold">
+                        <td class="text-danger fw-bold">
                             $@item.FineAmount
-                        </p>
-                    </div>
+                        </td>
 
-                    <div class="d-flex gap-2">
-
-                        <a asp-action="Details"
-                           asp-route-id="@item.Id"
-                           class="btn btn-outline-dark btn-sm">
-                            Details
-                        </a>
-
-                        @if (Context.Session.GetString("UserRole") == "Admin" ||
-                            Context.Session.GetString("UserRole") == "Staff")
+                        @if (isAdminOrStaff)
                         {
-                            <a asp-action="Edit"
-                               asp-route-id="@item.Id"
-                               class="btn btn-outline-primary btn-sm">
-                                Edit
-                            </a>
+                            <td>
+                                <div class="d-flex gap-2 flex-wrap">
 
-                            <a asp-action="Delete"
-                               asp-route-id="@item.Id"
-                               class="btn btn-outline-danger btn-sm">
-                                Delete
-                            </a>
+                                    @if (item.Status == "Borrowed")
+                                    {
+                                        <form asp-action="ReturnBook"
+                                              method="post">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@item.Id" />
+
+                                            <button type="submit"
+                                                    class="btn btn-success btn-sm">
+                                                Return Book
+                                            </button>
+
+                                        </form>
+                                    }
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-outline-danger btn-sm">
+                                        Delete
+                                    </a>
+
+                                </div>
+                            </td>
                         }
+                    </tr>
+                }
 
-                    </div>
+            </tbody>
 
-                </div>
+        </table>
 
-            </div>
-
-        </div>
-    }
-
-</div>
+    </div>
+}
