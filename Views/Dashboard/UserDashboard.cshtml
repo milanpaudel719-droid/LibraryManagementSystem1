@@ -2,33 +2,139 @@
     ViewData["Title"] = "User Dashboard";
 }
 
-<div class="dashboard-header mb-4">
-    <h1 class="fw-bold">User Dashboard</h1>
-    <p class="text-muted">Manage your borrowing activities and explore library services.</p>
-</div>
+<div class="dashboard-professional container-fluid">
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="feature-card">
-            <h4>Browse Catalogue</h4>
-            <p>Search and view available books in the library collection.</p>
-            <a asp-controller="Home" asp-action="Catalogue" class="btn btn-primary btn-sm">Open Catalogue</a>
-        </div>
+    <div class="dashboard-header mb-5">
+        <h1>User Dashboard</h1>
+        <p>
+            Review your library activity, borrowing updates, notices, and member support information.
+        </p>
     </div>
 
-    <div class="col-md-4">
-        <div class="feature-card">
-            <h4>My Borrowings</h4>
-            <p>View borrowed, reserved, returned, and overdue books.</p>
-            <a asp-controller="BorrowTransactions" asp-action="Index" class="btn btn-primary btn-sm">View Borrowings</a>
+    <div class="row g-4">
+
+        <div class="col-lg-4 col-md-6">
+            <div class="dashboard-action-card">
+                <div>
+                    <div class="dashboard-icon">📊</div>
+
+                    <h4>Borrowing Summary</h4>
+
+                    <p>
+                        View your current borrowed books, reserved items, overdue records,
+                        and complete borrowing activity summary.
+                    </p>
+
+                    <span class="badge bg-primary p-2">
+                        Active Member
+                    </span>
+                </div>
+
+                <a asp-controller="BorrowTransactions"
+                   asp-action="Index"
+                   class="btn btn-primary mt-4">
+                    View Borrowing Summary
+                </a>
+            </div>
         </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="dashboard-action-card">
+                <div>
+                    <div class="dashboard-icon">🔔</div>
+
+                    <h4>Library Notifications</h4>
+
+                    <p>
+                        Check overdue reminders, reservation updates, return deadlines,
+                        and important library notices.
+                    </p>
+
+                    <span class="badge bg-warning text-dark p-2">
+                        New Updates
+                    </span>
+                </div>
+
+                <a asp-controller="Home"
+                   asp-action="Notifications"
+                   class="btn btn-primary mt-4">
+                    Check Notifications
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="dashboard-action-card">
+                <div>
+                    <div class="dashboard-icon">🏆</div>
+
+                    <h4>Library Activity</h4>
+
+                    <p>
+                        Explore popular books, newly added titles, recommended books,
+                        and available library resources.
+                    </p>
+
+                    <span class="badge bg-success p-2">
+                        Updated Daily
+                    </span>
+                </div>
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-primary mt-4">
+                    View Library Highlights
+                </a>
+            </div>
+        </div>
+
     </div>
 
-    <div class="col-md-4">
-        <div class="feature-card">
-            <h4>Book Feedback</h4>
-            <p>Submit ratings and feedback for books you have read.</p>
-            <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-primary btn-sm">Give Feedback</a>
+    <div class="row g-4 mt-4">
+
+        <div class="col-lg-6">
+            <div class="dashboard-action-card">
+                <div>
+                    <div class="dashboard-icon">📌</div>
+
+                    <h4>Borrowing Guidelines</h4>
+
+                    <p>
+                        Members can borrow available books, reserve unavailable books,
+                        check due dates, and monitor overdue status. Each member can borrow
+                        up to five books at one time.
+                    </p>
+                </div>
+
+                <a asp-controller="Home"
+                   asp-action="BorrowingGuidelines"
+                   class="btn btn-primary mt-4">
+                    View Guidelines
+                </a>
+            </div>
         </div>
+
+        <div class="col-lg-6">
+            <div class="dashboard-action-card">
+                <div>
+                    <div class="dashboard-icon">ℹ️</div>
+
+                    <h4>Library Support</h4>
+
+                    <p>
+                        For renewal requests, overdue issues, reservation problems, or account
+                        support, members can contact library staff through the support page.
+                    </p>
+                </div>
+
+                <a asp-controller="Home"
+                   asp-action="ContactSupport"
+                   class="btn btn-primary mt-4">
+                    Contact Support
+                </a>
+            </div>
+        </div>
+
     </div>
+
 </div>

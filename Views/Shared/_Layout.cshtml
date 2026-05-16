@@ -3,12 +3,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"] - KOI Library</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
 </head>
 
 <body>
@@ -28,14 +35,14 @@
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        data-bs-target="#mainNavbar">
+
                     <span class="navbar-toggler-icon"></span>
+
                 </button>
 
-                <div class="collapse navbar-collapse" id="mainNavbar">
+                <div class="collapse navbar-collapse"
+                     id="mainNavbar">
 
                     <ul class="navbar-nav mx-auto">
 
@@ -55,7 +62,7 @@
                             </a>
                         </li>
 
-                        @if (Context.Session.GetString("UserRole") == "Member")
+                        @if (Context.Session.GetString("UserRole") == "User")
                         {
                             <li class="nav-item">
                                 <a class="nav-link"
@@ -78,14 +85,6 @@
                                    asp-controller="Feedbacks"
                                    asp-action="Index">
                                     Feedback
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   asp-controller="LibraryProfiles"
-                                   asp-action="Index">
-                                    Library Profile
                                 </a>
                             </li>
                         }
@@ -154,7 +153,7 @@
 
                     </ul>
 
-                    <div class="d-flex gap-2 align-items-center">
+                    <div class="d-flex align-items-center gap-2">
 
                         @if (Context.Session.GetString("UserName") != null)
                         {
@@ -194,17 +193,22 @@
     </header>
 
     <main class="container mt-4">
+
         @RenderBody()
+
     </main>
 
     <footer class="footer-section">
+
         <p>
             &copy; 2026 KOI Library Management System |
             Developed for ICT272 MVC Assessment
         </p>
+
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

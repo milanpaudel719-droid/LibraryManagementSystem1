@@ -6,19 +6,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <None Remove="Data\" />
     <None Remove="Views\LibraryProfiles\" />
     <None Remove="Views\Account\" />
     <None Remove="Views\Dashboard\" />
+    <None Remove="Views\Reports\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Views\LibraryProfiles\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Dashboard\" />
+    <Folder Include="Views\Reports\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />

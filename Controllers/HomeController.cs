@@ -66,6 +66,21 @@ public class HomeController : Controller
         return View(books.ToList());
     }
 
+    public IActionResult Notifications()
+    {
+        return View();
+    }
+
+    public IActionResult BorrowingGuidelines()
+    {
+        return View();
+    }
+
+    public IActionResult ContactSupport()
+    {
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();

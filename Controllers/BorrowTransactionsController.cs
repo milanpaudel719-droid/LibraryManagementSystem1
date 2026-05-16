@@ -45,7 +45,12 @@ namespace LibraryManagementSystem.Controllers
                 return RedirectToAction("Catalogue", "Home");
             }
 
-            var memberName = HttpContext.Session.GetString("UserName") ?? "Library Member";
+            var memberName = HttpContext.Session.GetString("UserName");
+
+            if (memberName == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
             var activeBorrowCount = _context.BorrowTransactions
                 .Count(t => t.MemberName == memberName && t.Status == "Borrowed");
@@ -78,6 +83,50 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
+        public IActionResult ReserveFromCatalogue(int bookId)
+        {
+            var book = _context.Books.FirstOrDefault(b => b.Id == bookId);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var memberName = HttpContext.Session.GetString("UserName");
+
+            if (memberName == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var alreadyReserved = _context.BorrowTransactions
+                .Any(t => t.MemberName == memberName &&
+                          t.BookTitle == book.Title &&
+                          t.Status == "Reserved");
+
+            if (alreadyReserved)
+            {
+                TempData["BorrowLimitMessage"] = "You have already reserved this book.";
+                return RedirectToAction("Catalogue", "Home");
+            }
+
+            var reservation = new BorrowTransaction
+            {
+                BookTitle = book.Title,
+                MemberName = memberName,
+                BorrowDate = DateTime.Now,
+                ReturnDate = DateTime.Now.AddDays(14),
+                Status = "Reserved",
+                FineAmount = 0
+            };
+
+            _context.BorrowTransactions.Add(reservation);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
         public IActionResult ReturnBook(int id)
         {
             var transaction = _context.BorrowTransactions
@@ -98,7 +147,7 @@ namespace LibraryManagementSystem.Controllers
             var book = _context.Books
                 .FirstOrDefault(b => b.Title == transaction.BookTitle);
 
-            if (book != null)
+            if (book != null && transaction.Status != "Reserved")
             {
                 book.AvailableCopies++;
 
