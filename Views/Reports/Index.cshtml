@@ -1,11 +1,58 @@
-﻿using System;
-namespace LibraryManagementSystem.Views.Reports
-{
-	public class Index
-	{
-		public Index()
-		{
-		}
-	}
+﻿@{
+    ViewData["Title"] = "Library Reports";
 }
 
+<div class="dashboard-header mb-5">
+    <h1 class="fw-bold">Library Reports</h1>
+    <p class="text-muted">
+        View key library activity reports including borrowing records, overdue items, and popular books.
+    </p>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-3">
+        <div class="feature-card text-center h-100">
+            <h2>📚</h2>
+            <h4>Total Books</h4>
+            <p class="text-muted">View all books available in the system.</p>
+            <a asp-controller="Books" asp-action="Index" class="btn btn-primary btn-sm">
+                View Books
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="feature-card text-center h-100">
+            <h2>🔁</h2>
+            <h4>Borrowing Records</h4>
+            <p class="text-muted">Track borrowed, reserved, and returned books.</p>
+            <a asp-controller="BorrowTransactions" asp-action="Index" class="btn btn-success btn-sm">
+                View Records
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="feature-card text-center h-100">
+            <h2>⏰</h2>
+            <h4>Overdue Books</h4>
+            <p class="text-muted">Monitor items that may require follow-up.</p>
+            <a asp-controller="BorrowTransactions" asp-action="Index" class="btn btn-warning btn-sm">
+                Check Overdue
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="feature-card text-center h-100">
+            <h2>⭐</h2>
+            <h4>Feedback</h4>
+            <p class="text-muted">Review ratings and comments from members.</p>
+            <a asp-controller="Feedbacks" asp-action="Index" class="btn btn-danger btn-sm">
+                View Feedback
+            </a>
+        </div>
+    </div>
+
+</div>

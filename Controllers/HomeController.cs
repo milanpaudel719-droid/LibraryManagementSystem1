@@ -18,12 +18,15 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        ViewBag.NewArrivals = _context.Books
+        var books = _context.Books.ToList();
+        var transactions = _context.BorrowTransactions.ToList();
+
+        ViewBag.NewArrivals = books
             .OrderByDescending(b => b.Id)
             .Take(4)
             .ToList();
 
-        ViewBag.MostBorrowed = _context.BorrowTransactions
+        ViewBag.MostBorrowed = transactions
             .GroupBy(t => t.BookTitle)
             .Select(g => new
             {
@@ -34,13 +37,12 @@ public class HomeController : Controller
             .Take(4)
             .ToList();
 
-        ViewBag.RecommendedBooks = _context.Books
+        ViewBag.RecommendedBooks = books
             .Where(b => b.AvailableCopies > 0)
-            .OrderBy(b => Guid.NewGuid())
             .Take(4)
             .ToList();
 
-        ViewBag.AvailableBooks = _context.Books
+        ViewBag.AvailableBooks = books
             .Where(b => b.AvailableCopies > 0)
             .Take(4)
             .ToList();
@@ -50,20 +52,69 @@ public class HomeController : Controller
 
     public IActionResult Catalogue(string searchString)
     {
-        var books = _context.Books.AsQueryable();
+        var books = _context.Books.ToList();
 
         if (!string.IsNullOrEmpty(searchString))
         {
             books = books.Where(b =>
-                b.Title.Contains(searchString) ||
-                b.Author.Contains(searchString) ||
-                b.Genre.Contains(searchString) ||
-                b.ISBN.Contains(searchString));
+                b.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                b.Author.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                b.Genre.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                b.ISBN.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+            ).ToList();
         }
 
         ViewData["CurrentFilter"] = searchString;
+        return View(books);
+    }
 
-        return View(books.ToList());
+    public IActionResult NewArrivals()
+    {
+        var books = _context.Books
+            .OrderByDescending(b => b.Id)
+            .Take(20)
+            .ToList();
+
+        return View("Catalogue", books);
+    }
+
+    public IActionResult MostBorrowed()
+    {
+        var transactions = _context.BorrowTransactions.ToList();
+
+        var popularTitles = transactions
+            .GroupBy(t => t.BookTitle)
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
+            .ToList();
+
+        var books = _context.Books
+            .ToList()
+            .Where(b => popularTitles.Contains(b.Title))
+            .ToList();
+
+        return View("Catalogue", books);
+    }
+
+    public IActionResult RecommendedBooks()
+    {
+        var books = _context.Books
+            .ToList()
+            .Where(b => b.AvailableCopies > 0)
+            .Take(20)
+            .ToList();
+
+        return View("Catalogue", books);
+    }
+
+    public IActionResult AvailableBooks()
+    {
+        var books = _context.Books
+            .ToList()
+            .Where(b => b.AvailableCopies > 0)
+            .ToList();
+
+        return View("Catalogue", books);
     }
 
     public IActionResult Notifications()

@@ -1,0 +1,32 @@
+﻿<Properties StartupConfiguration="{63609AE5-8428-41C9-84B2-C1045B26BB4E}|Default">
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/LibraryProfilesController.cs">
+    <Files>
+      <File FileName="Program.cs" Line="48" Column="1" />
+      <File FileName="Controllers/LibraryProfilesController.cs" Line="99" Column="10" />
+      <File FileName="Controllers/HomeController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/FeedbacksController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/DashboardController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/BorrowTransactionsController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/BorrowingSettingsController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/BooksController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/AccountController.cs" Line="1" Column="1" />
+      <File FileName="Controllers/ReportsControllers.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="LibraryManagementSystem">
+            <Node name="LibraryManagementSystem" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.LibraryManagementSystem PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+</Properties>

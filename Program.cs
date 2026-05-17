@@ -3,14 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllersWithViews();
 
 // Add session service
 builder.Services.AddSession();
 
-// MySQL Database Connection
-var connectionString = "server=localhost;port=3306;database=LibraryDB;user=libraryuser;password=library123;";
+// Railway MySQL Connection
+var connectionString =
+    "server=caboose.proxy.rlwy.net;" +
+    "port=17114;" +
+    "database=railway;" +
+    "user=root;" +
+    "password=uCNpgbPrESnIzDZmSdeTegvxeRYXXEVr;" +
+    "SslMode=Required;";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString,
@@ -18,6 +24,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
+// Configure HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

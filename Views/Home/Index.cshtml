@@ -5,19 +5,30 @@
 <section class="library-hero">
     <div class="hero-content">
         <h1>Discover, Borrow and Manage Books Online</h1>
+
         <p>
             KOI Library Management System provides a modern platform for librarians and members
             to manage books, borrowing records, feedback, and library services efficiently.
         </p>
 
         <div class="hero-buttons">
-            <a class="btn btn-light" asp-controller="Home" asp-action="Catalogue">Browse Collection</a>
-            <a class="btn btn-outline-light" asp-controller="BorrowTransactions" asp-action="Index">View My Borrowings</a>
+            <a class="btn btn-light"
+               asp-controller="Home"
+               asp-action="Catalogue">
+                Browse Collection
+            </a>
+
+            <a class="btn btn-outline-light"
+               asp-controller="BorrowTransactions"
+               asp-action="Index">
+                View My Borrowings
+            </a>
         </div>
     </div>
 </section>
 
 <section class="quick-stats">
+
     <div class="stat-card">
         <h3>500+</h3>
         <p>Books Managed</p>
@@ -37,11 +48,14 @@
         <h3>Secure</h3>
         <p>Library Records</p>
     </div>
+
 </section>
+
 <section class="mt-5">
 
     <div class="text-center mb-5">
         <h2 class="fw-bold display-5">Explore Library Highlights</h2>
+
         <p class="text-muted fs-5">
             Automatically generated from library records and borrowing activity.
         </p>
@@ -49,156 +63,265 @@
 
     <div class="row g-4">
 
+        <!-- NEW ARRIVALS -->
+
         <div class="col-lg-3 col-md-6">
+
             <div class="feature-card h-100 p-4">
-                <h4 class="fw-bold text-primary mb-3">📚 New Arrivals</h4>
+
+                <h4 class="fw-bold text-primary mb-3">
+                    📚 New Arrivals
+                </h4>
 
                 @foreach (var book in ViewBag.NewArrivals)
                 {
                     <div class="mb-3 border-bottom pb-2">
+
                         <strong>@book.Title</strong>
-                        <p class="text-muted mb-1">@book.Author</p>
+
+                        <p class="text-muted mb-1">
+                            @book.Author
+                        </p>
+
                     </div>
                 }
 
-                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-primary btn-sm">
+                <a asp-controller="Home"
+                   asp-action="NewArrivals"
+                   class="btn btn-primary btn-sm">
                     View New Books
                 </a>
+
             </div>
+
         </div>
 
+        <!-- MOST BORROWED -->
+
         <div class="col-lg-3 col-md-6">
+
             <div class="feature-card h-100 p-4">
-                <h4 class="fw-bold text-danger mb-3">🔥 Most Borrowed</h4>
+
+                <h4 class="fw-bold text-danger mb-3">
+                    🔥 Most Borrowed
+                </h4>
 
                 @foreach (var book in ViewBag.MostBorrowed)
                 {
                     <div class="mb-3 border-bottom pb-2">
+
                         <strong>@book.BookTitle</strong>
-                        <p class="text-muted mb-1">Borrowed @book.BorrowCount times</p>
+
+                        <p class="text-muted mb-1">
+                            Borrowed @book.BorrowCount times
+                        </p>
+
                     </div>
                 }
 
-                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-danger btn-sm">
+                <a asp-controller="Home"
+                   asp-action="MostBorrowed"
+                   class="btn btn-danger btn-sm">
                     View Popular
                 </a>
+
             </div>
+
         </div>
 
+        <!-- RECOMMENDED -->
+
         <div class="col-lg-3 col-md-6">
+
             <div class="feature-card h-100 p-4">
-                <h4 class="fw-bold text-warning mb-3">⭐ Recommended</h4>
+
+                <h4 class="fw-bold text-warning mb-3">
+                    ⭐ Recommended
+                </h4>
 
                 @foreach (var book in ViewBag.RecommendedBooks)
                 {
                     <div class="mb-3 border-bottom pb-2">
+
                         <strong>@book.Title</strong>
-                        <p class="text-muted mb-1">@book.Author</p>
+
+                        <p class="text-muted mb-1">
+                            @book.Author
+                        </p>
+
                     </div>
                 }
 
-                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-warning btn-sm">
+                <a asp-controller="Home"
+                   asp-action="RecommendedBooks"
+                   class="btn btn-warning btn-sm">
                     View Recommended
                 </a>
+
             </div>
+
         </div>
 
+        <!-- AVAILABLE BOOKS -->
+
         <div class="col-lg-3 col-md-6">
+
             <div class="feature-card h-100 p-4">
-                <h4 class="fw-bold text-success mb-3">✅ Available Books</h4>
+
+                <h4 class="fw-bold text-success mb-3">
+                    ✅ Available Books
+                </h4>
 
                 @foreach (var book in ViewBag.AvailableBooks)
                 {
                     <div class="mb-3 border-bottom pb-2">
+
                         <strong>@book.Title</strong>
-                        <p class="text-muted mb-1">Copies: @book.AvailableCopies</p>
+
+                        <p class="text-muted mb-1">
+                            Copies: @book.AvailableCopies
+                        </p>
+
                     </div>
                 }
 
-                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-success btn-sm">
+                <a asp-controller="Home"
+                   asp-action="AvailableBooks"
+                   class="btn btn-success btn-sm">
                     View Available
                 </a>
+
             </div>
+
         </div>
 
     </div>
 
 </section>
 
-
 <section class="mt-5">
-    <h2 class="section-title">System Features</h2>
+
+    <h2 class="section-title">
+        System Features
+    </h2>
 
     <div class="row g-4">
+
         <div class="col-md-3">
+
             <div class="feature-card">
+
                 <h4>Book Management</h4>
-                <p>Add, update, view, and manage book records with ISBN, genre, availability, and cover image details.</p>
+
+                <p>
+                    Add, update, view, and manage book records with ISBN,
+                    genre, availability, and cover image details.
+                </p>
+
             </div>
+
         </div>
 
         <div class="col-md-3">
+
             <div class="feature-card">
+
                 <h4>Library Profiles</h4>
-                <p>Manage library name, location, operating hours, and contact information.</p>
+
+                <p>
+                    Manage library name, location, operating hours,
+                    and contact information.
+                </p>
+
             </div>
+
         </div>
 
         <div class="col-md-3">
+
             <div class="feature-card">
+
                 <h4>Borrowing Records</h4>
-                <p>Track borrowed, reserved, returned, and overdue books with return dates and fines.</p>
+
+                <p>
+                    Track borrowed, reserved, returned, and overdue books
+                    with return dates and fines.
+                </p>
+
             </div>
+
         </div>
 
         <div class="col-md-3">
+
             <div class="feature-card">
+
                 <h4>Feedback & Ratings</h4>
-                <p>Allow members to submit feedback and ratings for books they have read.</p>
+
+                <p>
+                    Allow members to submit feedback and ratings
+                    for books they have read.
+                </p>
+
             </div>
+
         </div>
+
     </div>
+
 </section>
 
 <section class="mt-5">
-    <h2 class="section-title">Group Details</h2>
+
+    <h2 class="section-title">
+        Group Details
+    </h2>
+
     <p class="text-muted">
-        The following table presents the group members involved in developing this MVC Library Management System.
+        The following table presents the group members involved in developing
+        this MVC Library Management System.
     </p>
 
     <table class="table table-bordered table-striped professional-table">
+
         <thead>
+
             <tr>
                 <th>Student ID</th>
                 <th>Student Full Name</th>
                 <th>Task Completed</th>
             </tr>
+
         </thead>
 
         <tbody>
+
             <tr>
                 <td>20032372</td>
                 <td>Surya Paudel</td>
-                <td>Books Module, Database Setup, GitHub Integration</td>
+                <td>Login, Registration & Database setup, GitHub Integration</td>
             </tr>
 
             <tr>
                 <td>20033284</td>
                 <td>Yukesh Rai</td>
-                <td>Frontend Design, Navigation Menu, UI Styling</td>
+                <td>Homepage, Catalogue & Member Features</td>
             </tr>
 
             <tr>
-                <td>MEMBER ID</td>
-                <td>Sazana B</td>
-                <td>Testing, Documentation, Requirement Review</td>
+                <td>20031994</td>
+                <td>Sazana Bazimaya</td>
+                <td>User Dashboard including all details on it, Documentation, Requirement Review</td>
             </tr>
 
             <tr>
-                <td>MEMBER ID</td>
+                <td>20020424</td>
                 <td>Resica Shrestha</td>
-                <td>Borrowing Transactions, Feedback Module, Data Entry</td>
+                <td>Admin / Librarian Management dashboard including all the details on it</td>
             </tr>
+
         </tbody>
+
     </table>
+
 </section>

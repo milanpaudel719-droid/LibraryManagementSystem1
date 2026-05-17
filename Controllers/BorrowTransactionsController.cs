@@ -20,19 +20,34 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (_context.BorrowTransactions == null)
+            var userRole = HttpContext.Session.GetString("UserRole");
+            var userName = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(userName))
             {
-                return Problem("Entity set 'ApplicationDbContext.BorrowTransactions' is null.");
+                return RedirectToAction("Login", "Account");
             }
 
-            var transactions = await _context.BorrowTransactions.ToListAsync();
+            if (userRole == "Admin" || userRole == "Staff")
+            {
+                return View(await _context.BorrowTransactions.ToListAsync());
+            }
 
-            return View(transactions);
+            return View(await _context.BorrowTransactions
+                .Where(t => t.MemberName == userName)
+                .ToListAsync());
         }
 
         [HttpPost]
         public IActionResult CreateFromCatalogue(int bookId)
         {
+            var memberName = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(memberName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var book = _context.Books.FirstOrDefault(b => b.Id == bookId);
 
             if (book == null)
@@ -42,14 +57,8 @@ namespace LibraryManagementSystem.Controllers
 
             if (book.AvailableCopies <= 0)
             {
+                TempData["BorrowLimitMessage"] = "This book is currently not available. Please reserve it instead.";
                 return RedirectToAction("Catalogue", "Home");
-            }
-
-            var memberName = HttpContext.Session.GetString("UserName");
-
-            if (memberName == null)
-            {
-                return RedirectToAction("Login", "Account");
             }
 
             var activeBorrowCount = _context.BorrowTransactions
@@ -61,10 +70,21 @@ namespace LibraryManagementSystem.Controllers
                 return RedirectToAction("Catalogue", "Home");
             }
 
+            var alreadyBorrowed = _context.BorrowTransactions
+                .Any(t => t.MemberName == memberName &&
+                          t.BookTitle == book.Title &&
+                          t.Status == "Borrowed");
+
+            if (alreadyBorrowed)
+            {
+                TempData["BorrowLimitMessage"] = "You have already borrowed this book.";
+                return RedirectToAction("Catalogue", "Home");
+            }
+
             var transaction = new BorrowTransaction
             {
-                BookTitle = book.Title,
                 MemberName = memberName,
+                BookTitle = book.Title,
                 BorrowDate = DateTime.Now,
                 ReturnDate = DateTime.Now.AddDays(14),
                 Status = "Borrowed",
@@ -75,7 +95,12 @@ namespace LibraryManagementSystem.Controllers
 
             book.AvailableCopies--;
 
-            book.AvailabilityStatus = book.AvailableCopies == 0 ? "Borrowed" : "Available";
+            if (book.AvailableCopies < 0)
+            {
+                book.AvailableCopies = 0;
+            }
+
+            book.AvailabilityStatus = book.AvailableCopies > 0 ? "Available" : "Borrowed";
 
             _context.SaveChanges();
 
@@ -85,18 +110,18 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public IActionResult ReserveFromCatalogue(int bookId)
         {
+            var memberName = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(memberName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var book = _context.Books.FirstOrDefault(b => b.Id == bookId);
 
             if (book == null)
             {
                 return NotFound();
-            }
-
-            var memberName = HttpContext.Session.GetString("UserName");
-
-            if (memberName == null)
-            {
-                return RedirectToAction("Login", "Account");
             }
 
             var alreadyReserved = _context.BorrowTransactions
@@ -112,8 +137,8 @@ namespace LibraryManagementSystem.Controllers
 
             var reservation = new BorrowTransaction
             {
-                BookTitle = book.Title,
                 MemberName = memberName,
+                BookTitle = book.Title,
                 BorrowDate = DateTime.Now,
                 ReturnDate = DateTime.Now.AddDays(14),
                 Status = "Reserved",
@@ -129,8 +154,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public IActionResult ReturnBook(int id)
         {
-            var transaction = _context.BorrowTransactions
-                .FirstOrDefault(t => t.Id == id);
+            var transaction = _context.BorrowTransactions.FirstOrDefault(t => t.Id == id);
 
             if (transaction == null)
             {
@@ -142,21 +166,31 @@ namespace LibraryManagementSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var oldStatus = transaction.Status;
+
             transaction.Status = "Returned";
 
-            var book = _context.Books
-                .FirstOrDefault(b => b.Title == transaction.BookTitle);
-
-            if (book != null && transaction.Status != "Reserved")
+            if (DateTime.Now > transaction.ReturnDate)
             {
-                book.AvailableCopies++;
+                var overdueDays = (DateTime.Now.Date - transaction.ReturnDate.Date).Days;
+                transaction.FineAmount = overdueDays * 1;
+            }
 
-                if (book.AvailableCopies > book.TotalCopies)
+            if (oldStatus == "Borrowed")
+            {
+                var book = _context.Books.FirstOrDefault(b => b.Title == transaction.BookTitle);
+
+                if (book != null)
                 {
-                    book.AvailableCopies = book.TotalCopies;
-                }
+                    book.AvailableCopies++;
 
-                book.AvailabilityStatus = book.AvailableCopies > 0 ? "Available" : "Borrowed";
+                    if (book.AvailableCopies > book.TotalCopies)
+                    {
+                        book.AvailableCopies = book.TotalCopies;
+                    }
+
+                    book.AvailabilityStatus = book.AvailableCopies > 0 ? "Available" : "Borrowed";
+                }
             }
 
             _context.SaveChanges();
@@ -166,7 +200,7 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.BorrowTransactions == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -203,7 +237,7 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.BorrowTransactions == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -229,21 +263,8 @@ namespace LibraryManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(borrowTransaction);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BorrowTransactionExists(borrowTransaction.Id))
-                    {
-                        return NotFound();
-                    }
-
-                    throw;
-                }
-
+                _context.Update(borrowTransaction);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -252,7 +273,7 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.BorrowTransactions == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -272,26 +293,15 @@ namespace LibraryManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.BorrowTransactions == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.BorrowTransactions' is null.");
-            }
-
             var borrowTransaction = await _context.BorrowTransactions.FindAsync(id);
 
             if (borrowTransaction != null)
             {
                 _context.BorrowTransactions.Remove(borrowTransaction);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool BorrowTransactionExists(int id)
-        {
-            return (_context.BorrowTransactions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
