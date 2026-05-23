@@ -4,6 +4,14 @@
     ViewData["Title"] = "Catalogue";
 }
 
+@if (TempData["BorrowLimitMessage"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        <strong>Borrowing Notice:</strong> @TempData["BorrowLimitMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 <div class="text-center mb-5">
 
     <h1 class="fw-bold">KOI Library Catalogue</h1>
@@ -94,7 +102,11 @@
                         {
                             <form asp-controller="BorrowTransactions"
                                   asp-action="CreateFromCatalogue"
-                                  method="post">
+                                  method="post"
+                                  onsubmit="return showConfirmModal(this,
+                                  'Confirm Borrowing',
+                                  'Are you sure you want to borrow this book?',
+                                  'Yes, Borrow')">
 
                                 <input type="hidden"
                                        name="bookId"
@@ -116,7 +128,11 @@
 
                         <form asp-controller="BorrowTransactions"
                               asp-action="ReserveFromCatalogue"
-                              method="post">
+                              method="post"
+                              onsubmit="return showConfirmModal(this,
+                              'Confirm Reservation',
+                              'Are you sure you want to reserve this book?',
+                              'Yes, Reserve')">
 
                             <input type="hidden"
                                    name="bookId"

@@ -17,7 +17,60 @@
           asp-append-version="true" />
 
 </head>
+<script>function confirmAction(message) {
+        return confirm(message);
+    }</script>
+<div class="modal fade" id="confirmActionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
 
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <h5 class="modal-title fw-bold" id="confirmActionTitle">
+                    Confirm Action
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <p id="confirmActionMessage" class="mb-0 fs-6 text-muted">
+                    Are you sure you want to continue?
+                </p>
+            </div>
+
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    No, Cancel
+                </button>
+
+                <button type="button" class="btn btn-primary" id="confirmActionButton">
+                    Yes, Continue
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>let selectedForm = null;
+
+    function showConfirmModal(form, title, message, buttonText) {
+        selectedForm = form;
+
+        document.getElementById("confirmActionTitle").innerText = title;
+        document.getElementById("confirmActionMessage").innerText = message;
+        document.getElementById("confirmActionButton").innerText = buttonText;
+
+        const modal = new bootstrap.Modal(document.getElementById("confirmActionModal"));
+        modal.show();
+
+        return false;
+    }
+
+    document.getElementById("confirmActionButton").addEventListener("click", function () {
+        if (selectedForm) {
+            selectedForm.submit();
+        }
+    });</script>
 <body>
 
     <header>

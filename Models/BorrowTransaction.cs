@@ -20,5 +20,7 @@ namespace LibraryManagementSystem.Models
         public string Status { get; set; }
 
         public decimal FineAmount { get; set; }
+
+        public int RenewalCount { get; set; }
     }
 }

@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Data;
@@ -19,77 +18,158 @@ namespace LibraryManagementSystem.Controllers
             _context = context;
         }
 
-        // GET: Feedbacks
         public async Task<IActionResult> Index()
         {
-              return _context.Feedbacks != null ? 
-                          View(await _context.Feedbacks.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Feedbacks'  is null.");
+            var userRole = HttpContext.Session.GetString("UserRole");
+            var userName = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (userRole == "Admin" || userRole == "Staff")
+            {
+                return View(await _context.Feedbacks.ToListAsync());
+            }
+
+            return View(await _context.Feedbacks
+                .Where(f => f.MemberName == userName)
+                .ToListAsync());
         }
 
-        // GET: Feedbacks/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Create()
         {
-            if (id == null || _context.Feedbacks == null)
+            var userName = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(userName))
             {
-                return NotFound();
+                return RedirectToAction("Login", "Account");
             }
 
-            var feedback = await _context.Feedbacks
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (feedback == null)
+            var borrowedBooks = _context.BorrowTransactions
+                .Where(t => t.MemberName == userName &&
+                            (t.Status == "Borrowed" || t.Status == "Returned"))
+                .Select(t => t.BookTitle)
+                .Distinct()
+                .ToList();
+
+            if (!borrowedBooks.Any())
             {
-                return NotFound();
+                TempData["FeedbackMessage"] = "You can only give feedback for books you have borrowed.";
+                return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.BookTitle = new SelectList(borrowedBooks);
+
+            var feedback = new Feedback
+            {
+                MemberName = userName
+            };
 
             return View(feedback);
         }
 
-        // GET: Feedbacks/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Feedbacks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,MemberName,BookTitle,Rating,Comment")] Feedback feedback)
+        public async Task<IActionResult> Create(Feedback feedback)
         {
+            var userName = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            feedback.MemberName = userName;
+
+            var hasBorrowedBook = _context.BorrowTransactions.Any(t =>
+                t.MemberName == userName &&
+                t.BookTitle == feedback.BookTitle &&
+                (t.Status == "Borrowed" || t.Status == "Returned"));
+
+            if (!hasBorrowedBook)
+            {
+                ModelState.AddModelError("BookTitle", "You can only give feedback for books you have borrowed.");
+            }
+
+            if (feedback.Rating < 1 || feedback.Rating > 5)
+            {
+                ModelState.AddModelError("Rating", "Rating must be between 1 and 5.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(feedback);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            var borrowedBooks = _context.BorrowTransactions
+                .Where(t => t.MemberName == userName &&
+                            (t.Status == "Borrowed" || t.Status == "Returned"))
+                .Select(t => t.BookTitle)
+                .Distinct()
+                .ToList();
+
+            ViewBag.BookTitle = new SelectList(borrowedBooks, feedback.BookTitle);
+
             return View(feedback);
         }
 
-        // GET: Feedbacks/Edit/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var feedback = await _context.Feedbacks
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (feedback == null)
+            {
+                return NotFound();
+            }
+
+            return View(feedback);
+        }
+
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Feedbacks == null)
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "Admin" && userRole != "Staff")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (id == null)
             {
                 return NotFound();
             }
 
             var feedback = await _context.Feedbacks.FindAsync(id);
+
             if (feedback == null)
             {
                 return NotFound();
             }
+
             return View(feedback);
         }
 
-        // POST: Feedbacks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MemberName,BookTitle,Rating,Comment")] Feedback feedback)
+        public async Task<IActionResult> Edit(int id, Feedback feedback)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "Admin" && userRole != "Staff")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             if (id != feedback.Id)
             {
                 return NotFound();
@@ -97,37 +177,31 @@ namespace LibraryManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(feedback);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FeedbackExists(feedback.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(feedback);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(feedback);
         }
 
-        // GET: Feedbacks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Feedbacks == null)
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "Admin" && userRole != "Staff")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (id == null)
             {
                 return NotFound();
             }
 
             var feedback = await _context.Feedbacks
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (feedback == null)
             {
                 return NotFound();
@@ -136,28 +210,26 @@ namespace LibraryManagementSystem.Controllers
             return View(feedback);
         }
 
-        // POST: Feedbacks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Feedbacks == null)
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (userRole != "Admin" && userRole != "Staff")
             {
-                return Problem("Entity set 'ApplicationDbContext.Feedbacks'  is null.");
+                return RedirectToAction(nameof(Index));
             }
+
             var feedback = await _context.Feedbacks.FindAsync(id);
+
             if (feedback != null)
             {
                 _context.Feedbacks.Remove(feedback);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool FeedbackExists(int id)
-        {
-          return (_context.Feedbacks?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

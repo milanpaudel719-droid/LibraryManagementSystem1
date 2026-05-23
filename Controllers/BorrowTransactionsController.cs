@@ -55,18 +55,19 @@ namespace LibraryManagementSystem.Controllers
                 return NotFound();
             }
 
-            if (book.AvailableCopies <= 0)
-            {
-                TempData["BorrowLimitMessage"] = "This book is currently not available. Please reserve it instead.";
-                return RedirectToAction("Catalogue", "Home");
-            }
+            var setting = _context.BorrowingSettings.FirstOrDefault();
+
+            int maxBorrowLimit = setting != null ? setting.MaxBorrowableItems : 3;
+            int loanDays = setting != null ? setting.LoanDurationDays : 14;
 
             var activeBorrowCount = _context.BorrowTransactions
                 .Count(t => t.MemberName == memberName && t.Status == "Borrowed");
 
-            if (activeBorrowCount >= 5)
+            if (activeBorrowCount >= maxBorrowLimit)
             {
-                TempData["BorrowLimitMessage"] = "You cannot borrow more than 5 books at one time.";
+                TempData["BorrowLimitMessage"] =
+                    $"Your borrowing limit has been reached. You can borrow maximum {maxBorrowLimit} books only. Please return a book before borrowing another one.";
+
                 return RedirectToAction("Catalogue", "Home");
             }
 
@@ -77,7 +78,17 @@ namespace LibraryManagementSystem.Controllers
 
             if (alreadyBorrowed)
             {
-                TempData["BorrowLimitMessage"] = "You have already borrowed this book.";
+                TempData["BorrowLimitMessage"] =
+                    "You have already borrowed this book. The same book cannot be borrowed twice.";
+
+                return RedirectToAction("Catalogue", "Home");
+            }
+
+            if (book.AvailableCopies <= 0)
+            {
+                TempData["BorrowLimitMessage"] =
+                    "This book is currently not available. Please reserve it instead.";
+
                 return RedirectToAction("Catalogue", "Home");
             }
 
@@ -86,7 +97,7 @@ namespace LibraryManagementSystem.Controllers
                 MemberName = memberName,
                 BookTitle = book.Title,
                 BorrowDate = DateTime.Now,
-                ReturnDate = DateTime.Now.AddDays(14),
+                ReturnDate = DateTime.Now.AddDays(loanDays),
                 Status = "Borrowed",
                 FineAmount = 0
             };
@@ -135,12 +146,28 @@ namespace LibraryManagementSystem.Controllers
                 return RedirectToAction("Catalogue", "Home");
             }
 
+            var alreadyBorrowed = _context.BorrowTransactions
+                .Any(t => t.MemberName == memberName &&
+                          t.BookTitle == book.Title &&
+                          t.Status == "Borrowed");
+
+            if (alreadyBorrowed)
+            {
+                TempData["BorrowLimitMessage"] =
+                    "You have already borrowed this book, so you cannot reserve the same book.";
+
+                return RedirectToAction("Catalogue", "Home");
+            }
+
+            var setting = _context.BorrowingSettings.FirstOrDefault();
+            int loanDays = setting != null ? setting.LoanDurationDays : 14;
+
             var reservation = new BorrowTransaction
             {
                 MemberName = memberName,
                 BookTitle = book.Title,
                 BorrowDate = DateTime.Now,
-                ReturnDate = DateTime.Now.AddDays(14),
+                ReturnDate = DateTime.Now.AddDays(loanDays),
                 Status = "Reserved",
                 FineAmount = 0
             };
@@ -170,10 +197,13 @@ namespace LibraryManagementSystem.Controllers
 
             transaction.Status = "Returned";
 
-            if (DateTime.Now > transaction.ReturnDate)
+            var setting = _context.BorrowingSettings.FirstOrDefault();
+            decimal overduePenalty = setting != null ? setting.OverduePenalty : 1;
+
+            if (DateTime.Now.Date > transaction.ReturnDate.Date)
             {
                 var overdueDays = (DateTime.Now.Date - transaction.ReturnDate.Date).Days;
-                transaction.FineAmount = overdueDays * 1;
+                transaction.FineAmount = overdueDays * overduePenalty;
             }
 
             if (oldStatus == "Borrowed")
@@ -198,6 +228,51 @@ namespace LibraryManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public IActionResult RenewBook(int id)
+        {
+            var memberName = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(memberName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var transaction = _context.BorrowTransactions
+                .FirstOrDefault(t => t.Id == id && t.MemberName == memberName);
+
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            if (transaction.Status != "Borrowed")
+            {
+                TempData["BorrowLimitMessage"] = "Only borrowed books can be renewed.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (transaction.RenewalCount >= 1)
+            {
+                TempData["BorrowLimitMessage"] = "Renewal limit reached. This book can only be renewed once.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (DateTime.Now.Date > transaction.ReturnDate.Date)
+            {
+                TempData["BorrowLimitMessage"] = "This book is already overdue and cannot be renewed.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            transaction.ReturnDate = transaction.ReturnDate.AddDays(7);
+            transaction.RenewalCount += 1;
+
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Book renewed successfully. Return date extended by 7 days.";
+
+            return RedirectToAction(nameof(Index));
+        }
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
